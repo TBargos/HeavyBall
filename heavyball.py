@@ -25,33 +25,44 @@ def find_x_extra(x_val: list[float | int]) -> list[float | int]:
 # Метод тяжёлого шарика
 def heavy_ball(x_min_max: list[int | float]) -> list[dict]:
     eps: float = .0001  # Заданная точность
+    # Прочие переменные
     h: int | float
     d: int | float
-    
-    
+    result: list[dict[str, int | float]] = []
+
+    # Цикл позволяет перебрать два экстремума как значения листа, но с использованием индекса
     for i in range(len(x_min_max)):
         x: int | float = x_min_max[i]
         h = .2
         d = abs(h)
         n: int = 0  # Счётчик шагов
-        # Для каждого экстремума нужно разное сравнение, создадим анонимную функцию
+        # Для каждого экстремума нужно разное сравнение, создадим анонимную функцию или лямбда-функцию
         if x == min(x_min_max):
             comp = lambda a, b: a < b
         elif x == max(x_min_max):
             comp = lambda a, b: a > b
-            
+        # Центральный цикл
         while d > eps:
-            if n != 0:
+            if n != 0:  # Вычисление промежуточных переменных начинается со второго шага, не с первого
                 x += h
-                h = h if comp(equation_func(x - h), equation_func(x)) else -1*h/2
+                h = h if comp(equation_func(x - h), equation_func(x)) else -1*h/2  # Условное присвоение в одну строку
                 d = abs(h)
-            print("n =", n+1, "\tx =", x, "\tF(x) =", equation_func(x), "\th =", h, "\td =", d)
+            # Если нужно отследить промежуточные значения всех переменных
+            # print("n =", n+1, "\tx =", x, "\tF(x) =", equation_func(x), "\th =", h, "\td =", d)
             n += 1
         else:
-            print(d < eps)
+            # print("-"*160)
             n -= 1
-    
-    return [dict()]
+
+        # Словарь для удобного вывода через pprint.pprint
+        result.append({
+            "n": n,
+            "x": x,
+            "F(x)": equation_func(x),
+            "h": h,
+            "d": d
+        })
+    return result
 
 
 # Создание листа значений x
